@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q2 - Retrieve and Display JSON Data</title>
+</head>
+<body>
+  <h1>Book Collection Details</h1>
+  <div id="output" role="status" aria-live="polite">Loading books...</div>
+
+  <script>
+    async function loadBooks() {
+      const outputDiv = document.getElementById("output");
+
+      try {
+        const response = await fetch("books.json");
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const books = data.books;
+
+        // Clear loading message
+        outputDiv.textContent = "";
+
+        // (a) Title of the first book
+        const firstBookP = document.createElement("p");
+        firstBookP.textContent = `First Book Title: ${books[0].title}`;
+        outputDiv.appendChild(firstBookP);
+
+        // (b) Author of the second book
+        const secondAuthorP = document.createElement("p");
+        secondAuthorP.textContent = `Second Book Author: ${books[1].author}`;
+        outputDiv.appendChild(secondAuthorP);
+
+        // (c) Genres of both books, clearly grouped by book title
+        const genresHeading = document.createElement("h2");
+        genresHeading.textContent = "Genres by Book Title";
+        outputDiv.appendChild(genresHeading);
+
+        const genreList = document.createElement("ul");
+        for (const book of books) {
+          const listItem = document.createElement("li");
+          listItem.textContent = `${book.title} — ${book.genres.join(", ")}`;
+          genreList.appendChild(listItem);
+        }
+        outputDiv.appendChild(genreList);
+
+      } catch (error) {
+        outputDiv.textContent = `Unable to load book data: ${error.message}`;
+      }
+    }
+
+    loadBooks();
+  </script>
+</body>
+</html>
